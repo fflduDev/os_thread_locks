@@ -3,12 +3,15 @@
 #include <unistd.h>
 
 static int s = 0;
+static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 void *CountUp(void *id){
     for (int i=0; i<20000; i++){
+        pthread_mutex_lock(&lock);
         int temp = s;
-        usleep(1);  // let the other thread run
+        usleep(1);
         s = temp + 1;
+        pthread_mutex_unlock(&lock);
     }
     return NULL;
 }
